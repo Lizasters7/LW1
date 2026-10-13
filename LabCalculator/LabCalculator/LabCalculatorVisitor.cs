@@ -9,7 +9,7 @@ namespace LabCalculator
 {
     class LabCalculatorVisitor : LabCalculatorBaseVisitor<double>
     {
-        Dictionary<string, double> tableIdentifier = new Dictionary<string, double>();
+       Dictionary<string, double> tableIdentifier = new Dictionary<string, double>();
 
         public override double VisitCompileUnit(LabCalculatorParser.CompileUnitContext context)
         {
@@ -51,7 +51,7 @@ namespace LabCalculator
                 Debug.WriteLine("{0} + {1}", left, right);
                 return left + right;
             }
-            else //LabCalculatorLexer.SUBTRACT
+            else 
             {
                 Debug.WriteLine("{0} - {1}", left, right);
                 return left - right;
@@ -67,11 +67,73 @@ namespace LabCalculator
                 Debug.WriteLine("{0} * {1}", left, right);
                 return left * right;
             }
-            else //LabCalculatorLexer.DIVIDE
+            else 
             {
                 Debug.WriteLine("{0} / {1}", left, right);
                 return left / right;
             }
+        }
+
+        public override double VisitUnaryExpr(LabCalculatorParser.UnaryExprContext context)
+        {
+            var value = Visit(context.expression());
+            if (context.operatorToken.Type == LabCalculatorLexer.SUBTRACT)
+            {
+                Debug.WriteLine("unary - {0}", value);
+                return -value;
+            }
+            else 
+            {
+                return value;
+            }
+        }
+
+        public override double VisitIncDecExpr(LabCalculatorParser.IncDecExprContext context)
+        {
+            var value = Visit(context.expression());
+            if (context.operatorToken.Type == LabCalculatorLexer.INC)
+            {
+                Debug.WriteLine("inc({0})", value);
+                return value + 1;
+            }
+            else 
+            {
+                Debug.WriteLine("dec({0})", value);
+                return value - 1;
+            }
+        }
+
+        public override double VisitComparisonExpr(LabCalculatorParser.ComparisonExprContext context)
+        {
+            var left = WalkLeft(context);
+            var right = WalkRight(context);
+            bool result;
+            if (context.operatorToken.Type == LabCalculatorLexer.EQUAL)
+            {
+                result = left == right;
+            }
+            else if (context.operatorToken.Type == LabCalculatorLexer.NOT_EQUAL)
+            {
+                result = left != right;
+            }
+            else if (context.operatorToken.Type == LabCalculatorLexer.LESS)
+            {
+                result = left < right;
+            }
+            else if (context.operatorToken.Type == LabCalculatorLexer.GREATER)
+            {
+                result = left > right;
+            }
+            else if (context.operatorToken.Type == LabCalculatorLexer.LESS_EQUAL)
+            {
+                result = left <= right;
+            }
+            else 
+            {
+                result = left >= right;
+            }
+            Debug.WriteLine("{0} {1} -> {2}", left, right, result);
+            return result ? 1.0 : 0.0;
         }
 
         private double WalkLeft(LabCalculatorParser.ExpressionContext context)

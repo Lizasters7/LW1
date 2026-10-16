@@ -22,7 +22,14 @@ namespace LabCalculator
             try
             {
                 var res = Calculator.Evaluate(textBox1.Text);
-                label1.Text = (res == 1.0) ? "True" : "False";
+                if (res is bool b)
+                {
+                    label1.Text = b ? "True" : "False";
+                }
+                else
+                {
+                    label1.Text = res.ToString();
+                }
             }
             catch (Exception ex)
             {

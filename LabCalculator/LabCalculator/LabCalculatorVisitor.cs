@@ -7,23 +7,23 @@ using System.Threading.Tasks;
 
 namespace LabCalculator
 {
-    class LabCalculatorVisitor : LabCalculatorBaseVisitor<double>
+    class LabCalculatorVisitor : LabCalculatorBaseVisitor<object>
     {
        Dictionary<string, double> tableIdentifier = new Dictionary<string, double>();
 
-        public override double VisitCompileUnit(LabCalculatorParser.CompileUnitContext context)
+        public override object VisitCompileUnit(LabCalculatorParser.CompileUnitContext context)
         {
             return Visit(context.expression());
         }
 
-        public override double VisitNumberExpr(LabCalculatorParser.NumberExprContext context)
+        public override object VisitNumberExpr(LabCalculatorParser.NumberExprContext context)
         {
             var result = double.Parse(context.GetText());
             Debug.WriteLine(result);
             return result;
         }
 
-        public override double VisitIdentifierExpr(LabCalculatorParser.IdentifierExprContext context)
+        public override object VisitIdentifierExpr(LabCalculatorParser.IdentifierExprContext context)
         {
             var result = context.GetText();
             double value;
@@ -37,12 +37,12 @@ namespace LabCalculator
             }
         }
 
-        public override double VisitParenthesizedExpr(LabCalculatorParser.ParenthesizedExprContext context)
+        public override object VisitParenthesizedExpr(LabCalculatorParser.ParenthesizedExprContext context)
         {
             return Visit(context.expression());
         }
 
-        public override double VisitAdditiveExpr(LabCalculatorParser.AdditiveExprContext context)
+        public override object VisitAdditiveExpr(LabCalculatorParser.AdditiveExprContext context)
         {
             var left = WalkLeft(context);
             var right = WalkRight(context);
@@ -58,7 +58,7 @@ namespace LabCalculator
             }
         }
 
-        public override double VisitMultiplicativeExpr(LabCalculatorParser.MultiplicativeExprContext context)
+        public override object VisitMultiplicativeExpr(LabCalculatorParser.MultiplicativeExprContext context)
         {
             var left = WalkLeft(context);
             var right = WalkRight(context);
@@ -74,9 +74,9 @@ namespace LabCalculator
             }
         }
 
-        public override double VisitUnaryExpr(LabCalculatorParser.UnaryExprContext context)
+        public override object VisitUnaryExpr(LabCalculatorParser.UnaryExprContext context)
         {
-            var value = Visit(context.expression());
+            var value = (double)Visit(context.expression());
             if (context.operatorToken.Type == LabCalculatorLexer.SUBTRACT)
             {
                 Debug.WriteLine("unary - {0}", value);
@@ -88,9 +88,9 @@ namespace LabCalculator
             }
         }
 
-        public override double VisitIncDecExpr(LabCalculatorParser.IncDecExprContext context)
+        public override object VisitIncDecExpr(LabCalculatorParser.IncDecExprContext context)
         {
-            var value = Visit(context.expression());
+            var value = (double)Visit(context.expression());
             if (context.operatorToken.Type == LabCalculatorLexer.INC)
             {
                 Debug.WriteLine("inc({0})", value);
@@ -103,7 +103,7 @@ namespace LabCalculator
             }
         }
 
-        public override double VisitComparisonExpr(LabCalculatorParser.ComparisonExprContext context)
+        public override object VisitComparisonExpr(LabCalculatorParser.ComparisonExprContext context)
         {
             var left = WalkLeft(context);
             var right = WalkRight(context);
@@ -133,17 +133,17 @@ namespace LabCalculator
                 result = left >= right;
             }
             Debug.WriteLine("{0} {1} -> {2}", left, right, result);
-            return result ? 1.0 : 0.0;
+            return result;
         }
 
         private double WalkLeft(LabCalculatorParser.ExpressionContext context)
         {
-            return Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
+            return (double)Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
         }
 
         private double WalkRight(LabCalculatorParser.ExpressionContext context)
         {
-            return Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(1));
+            return (double)Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(1));
         }
     }
 }

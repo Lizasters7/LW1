@@ -9,7 +9,7 @@ namespace LabCalculator
 {
     public static class Calculator
     {
-        public static double Evaluate(string expression)
+        public static object Evaluate(string expression)
         {
             var lexer = new LabCalculatorLexer(new AntlrInputStream(expression));
             lexer.RemoveErrorListeners();

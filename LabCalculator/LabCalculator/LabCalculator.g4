@@ -15,6 +15,8 @@ expression :
   | expression operatorToken=(EQUAL | NOT_EQUAL | LESS | GREATER | LESS_EQUAL | GREATER_EQUAL) expression  #ComparisonExpr
   | NUMBER                                                    #NumberExpr
   | IDENTIFIER                                                #IdentifierExpr
+  | TRUE                                                      #TrueExpr
+  | FALSE                                                     #FalseExpr
   ;
 
 /*
@@ -24,6 +26,8 @@ expression :
 NUMBER : INT ('.' INT)?;
 INC : 'inc';
 DEC : 'dec';
+TRUE : 'true';
+FALSE : 'false';
 IDENTIFIER : [a-zA-Z]+[1-9][0-9]*;
 INT : ('0'..'9')+;
 MULTIPLY : '*';

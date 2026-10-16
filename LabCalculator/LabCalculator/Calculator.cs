@@ -11,6 +11,10 @@ namespace LabCalculator
     {
         public static object Evaluate(string expression)
         {
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                throw new ArgumentException("Expression cannot be empty");
+            }
             var lexer = new LabCalculatorLexer(new AntlrInputStream(expression));
             lexer.RemoveErrorListeners();
             lexer.AddErrorListener(new ThrowExceptionErrorListener());

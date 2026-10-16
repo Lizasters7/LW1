@@ -69,6 +69,10 @@ namespace LabCalculator
             }
             else 
             {
+                if (context.operatorToken.Type == LabCalculatorLexer.DIVIDE && right == 0)
+                {
+                    throw new DivideByZeroException("Division by zero");
+                }
                 Debug.WriteLine("{0} / {1}", left, right);
                 return left / right;
             }
@@ -138,12 +142,32 @@ namespace LabCalculator
 
         private double WalkLeft(LabCalculatorParser.ExpressionContext context)
         {
+            var value = Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
+            if (!(value is double))
+            {
+                throw new ArgumentException("Expected a number, got a boolean value");
+            }
             return (double)Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
         }
 
         private double WalkRight(LabCalculatorParser.ExpressionContext context)
         {
+            var value = Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(1));
+            if (!(value is double))
+            {
+                throw new ArgumentException("Expected a number, got a boolean value");
+            }
             return (double)Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(1));
+        }
+
+        public override object VisitTrueExpr(LabCalculatorParser.TrueExprContext context)
+        {
+            return true;
+        }
+
+        public override object VisitFalseExpr(LabCalculatorParser.FalseExprContext context)
+        {
+            return false;
         }
     }
 }

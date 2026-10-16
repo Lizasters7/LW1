@@ -36,14 +36,14 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(369, 184);
+            this.textBox1.Location = new System.Drawing.Point(318, 296);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.Size = new System.Drawing.Size(250, 20);
             this.textBox1.TabIndex = 0;
             // 
             // Calculate
             // 
-            this.Calculate.Location = new System.Drawing.Point(378, 210);
+            this.Calculate.Location = new System.Drawing.Point(399, 322);
             this.Calculate.Name = "Calculate";
             this.Calculate.Size = new System.Drawing.Size(75, 23);
             this.Calculate.TabIndex = 1;
@@ -54,17 +54,16 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(399, 248);
+            this.label1.Location = new System.Drawing.Point(420, 348);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(0, 13);
             this.label1.TabIndex = 2;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(232, 156);
+            this.label2.Location = new System.Drawing.Point(227, 253);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(388, 13);
+            this.label2.Size = new System.Drawing.Size(600, 40);
             this.label2.TabIndex = 3;
             this.label2.Text = "Available operations: + - * / , unary + -, inc(x), dec(x), comparisons = <> < > <" +
     "= >=";
@@ -72,15 +71,13 @@
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(962, 543);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.Calculate);
             this.Controls.Add(this.textBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

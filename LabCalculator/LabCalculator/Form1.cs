@@ -31,10 +31,23 @@ namespace LabCalculator
                     label1.Text = res.ToString();
                 }
             }
+            catch (DivideByZeroException ex)
+            {
+                MessageBox.Show(ex.Message, "Error: division by zero");
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(ex.Message, "Error in expression");
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "The mistake in the expression");
+                MessageBox.Show(ex.Message, "Unknown error");
             }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void label2_Click(object sender, EventArgs e)

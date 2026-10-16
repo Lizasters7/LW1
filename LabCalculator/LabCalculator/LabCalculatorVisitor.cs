@@ -109,33 +109,56 @@ namespace LabCalculator
 
         public override object VisitComparisonExpr(LabCalculatorParser.ComparisonExprContext context)
         {
-            var left = WalkLeft(context);
-            var right = WalkRight(context);
+            var left = WalkLeftRaw(context);
+            var right = WalkRightRaw(context);
             bool result;
-            if (context.operatorToken.Type == LabCalculatorLexer.EQUAL)
+            if (left is bool leftBool && right is bool rightBool)
             {
-                result = left == right;
+                if (context.operatorToken.Type == LabCalculatorLexer.EQUAL)
+                {
+                    result = leftBool == rightBool;
+                }
+                else if (context.operatorToken.Type == LabCalculatorLexer.NOT_EQUAL)
+                {
+                    result = leftBool != rightBool;
+                }
+                else
+                {
+                    throw new ArgumentException("This comparison operator is not supported for boolean values");
+                }
             }
-            else if (context.operatorToken.Type == LabCalculatorLexer.NOT_EQUAL)
+            else if (left is double leftNum && right is double rightNum)
             {
-                result = left != right;
+                if (context.operatorToken.Type == LabCalculatorLexer.EQUAL)
+                {
+                    result = leftNum == rightNum;
+                }
+                else if (context.operatorToken.Type == LabCalculatorLexer.NOT_EQUAL)
+                {
+                    result = leftNum != rightNum;
+                }
+                else if (context.operatorToken.Type == LabCalculatorLexer.LESS)
+                {
+                    result = leftNum < rightNum;
+                }
+                else if (context.operatorToken.Type == LabCalculatorLexer.GREATER)
+                {
+                    result = leftNum > rightNum;
+                }
+                else if (context.operatorToken.Type == LabCalculatorLexer.LESS_EQUAL)
+                {
+                    result = leftNum <= rightNum;
+                }
+                else 
+                {
+                    result = leftNum >= rightNum;
+                }
             }
-            else if (context.operatorToken.Type == LabCalculatorLexer.LESS)
+            else
             {
-                result = left < right;
+                throw new ArgumentException("Cannot compare a number with a boolean value");
             }
-            else if (context.operatorToken.Type == LabCalculatorLexer.GREATER)
-            {
-                result = left > right;
-            }
-            else if (context.operatorToken.Type == LabCalculatorLexer.LESS_EQUAL)
-            {
-                result = left <= right;
-            }
-            else 
-            {
-                result = left >= right;
-            }
+
             Debug.WriteLine("{0} {1} -> {2}", left, right, result);
             return result;
         }
@@ -148,6 +171,16 @@ namespace LabCalculator
                 throw new ArgumentException("Expected a number, got a boolean value");
             }
             return (double)Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
+        }
+
+        private object WalkLeftRaw(LabCalculatorParser.ExpressionContext context)
+        {
+            return Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(0));
+        }
+
+        private object WalkRightRaw(LabCalculatorParser.ExpressionContext context)
+        {
+            return Visit(context.GetRuleContext<LabCalculatorParser.ExpressionContext>(1));
         }
 
         private double WalkRight(LabCalculatorParser.ExpressionContext context)
